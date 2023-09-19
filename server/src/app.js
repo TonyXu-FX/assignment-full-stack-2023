@@ -1,10 +1,10 @@
-const express = require('express');
+import express from 'express';
+import employeeRouter from './routes/employees.js';
 
 const app = express();
 app.use(express.json());
 
-const employees = require('./routes/employees');
-app.use('/api/employees', employees);
+app.use('/api/employee', employeeRouter);
 
 const port = process.env.PORT || 8082;
 

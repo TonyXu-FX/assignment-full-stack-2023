@@ -1,32 +1,32 @@
-const express = require('express');
-const router = express.Router();
+import express from 'express';
+const employeeRouter = express.Router();
 
 /**
  * Get a list of all employees
  */
-router.get('/', (req, res) => {
+employeeRouter.get('/', (req, res) => {
   res.send("Get");
 });
 
 /**
  * Add a given employee
  */
-router.post('/', (req, res) => {
+employeeRouter.post('/', (req, res) => {
   res.send(`Post ${JSON.stringify(req.body)}`);
 });
 
 /**
  * Delete an employee with a given id
  */
-router.delete('/:id', (req, res) => {
+employeeRouter.delete('/:id', (req, res) => {
   res.send(`Delete ${req.params.id}`);
-})
+});
 
 /**
  * Updates an employee with the given info, if they exist
  */
-router.put('/', (req, res) => {
+employeeRouter.put('/', (req, res) => {
   res.send(`Put ${JSON.stringify(req.body)}`);
-})
+});
 
-module.exports = router;
+export default employeeRouter;
