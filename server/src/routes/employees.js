@@ -1,4 +1,6 @@
 import express from 'express';
+import { createEmployee } from '../db/employee.js';
+
 const employeeRouter = express.Router();
 
 /**
@@ -9,10 +11,11 @@ employeeRouter.get('/', (req, res) => {
 });
 
 /**
- * Add a given employee
+ * Add a given employee, return the created employee with an ID
  */
-employeeRouter.post('/', (req, res) => {
-  res.send(`Post ${JSON.stringify(req.body)}`);
+employeeRouter.post('/', async (req, res) => {
+  const created = await createEmployee(req.body);
+  res.json(created);
 });
 
 /**
