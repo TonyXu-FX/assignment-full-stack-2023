@@ -7,6 +7,7 @@ import InputDialog from './components/Dialogue/InputDialog';
 import './App.css';
 import { addEmployee, deleteEmployee, editEmployee, getEmployees } from './helpers/api';
 import { isEmployeeValid } from './helpers/helpers';
+import * as Constants from './helpers/constants';
 
 /**
  * The table displaying all employee info
@@ -124,11 +125,11 @@ const EmployeeForm = ({
   return (
     <InputDialog
       visible={dialogVisible}
-      title={currentEmp !== null ? "Edit Employee" : "Add Employee"}
+      title={currentEmp !== null ? Constants.EDIT_EMP : Constants.ADD_EMP}
       handleClose={handleClose}
       handleSubmit={handleSubmit}
       isError={isError}
-      errorMsg={"Error: Some field is invalid"}
+      errorMsg={Constants.EMP_INVALID_FIELD_MSG}
     >
       <Form>
         <Form.Group className="mb-3" controlId="firstName">
@@ -174,13 +175,13 @@ const DeleteForm = ({
   return (
     <InputDialog
       visible={dialogVisible}
-      title={"Delete Employee"}
+      title={Constants.DELETE_EMP}
       handleClose={handleClose}
       handleSubmit={handleSubmit}
       isDelete
     >
       {currentEmp !== null ?
-        `Are you sure you want to delete ${currentEmp.firstName} ${currentEmp.lastName}?` :
+        Constants.confirmEmpDelete(currentEmp.firstName, currentEmp.lastName) :
         null}
     </InputDialog>
   );
@@ -223,10 +224,10 @@ function App() {
     setIsError(true);
     if (currentEmp !== null) {
       // If currentEmp is not null, editing an employee
-      setErrorMsg("Failed to edit employee");
+      setErrorMsg(Constants.EDIT_EMP_FAILED);
     } else {
       // currentEmp is not, adding an employee
-      setErrorMsg("Failed to add employee");
+      setErrorMsg(Constants.ADD_EMP_FAILED);
     }
   }
 
@@ -236,7 +237,7 @@ function App() {
 
   const onDeleteFail = () => {
     setIsError(true);
-    setErrorMsg("Failed to delete employee");
+    setErrorMsg(Constants.DELETE_EMP_FAILED);
   }
 
   useEffect(() => {

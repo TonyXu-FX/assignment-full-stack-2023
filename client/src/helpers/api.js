@@ -1,4 +1,5 @@
 import axios from 'axios';
+import * as Constants from './constants';
 
 const baseUrl = "http://localhost:8082/api";
 
@@ -6,7 +7,7 @@ const baseUrl = "http://localhost:8082/api";
  * Return a list of all employees
  */
 export const getEmployees = async () => {
-  const res = await axios.get(`${baseUrl}/employees`);
+  const res = await axios.get(baseUrl + Constants.EMP_ENDPOINT);
   return res.data;
 }
 
@@ -16,7 +17,7 @@ export const getEmployees = async () => {
  */
 export const editEmployee = (employee) => {
   return axios.put(
-    `${baseUrl}/employees/${employee._id}`,
+    `${baseUrl}${Constants.EMP_ENDPOINT}/${employee._id}`,
     employee
   );
 }
@@ -29,7 +30,7 @@ export const editEmployee = (employee) => {
  */
 export const addEmployee = (employee) => {
   return axios.post(
-    `${baseUrl}/employees`,
+    baseUrl + Constants.EMP_ENDPOINT,
     employee
   )
 }
@@ -39,5 +40,5 @@ export const addEmployee = (employee) => {
  * Return a promise with the results of the call
  */
 export const deleteEmployee = (employee) => {
-  return axios.delete(`${baseUrl}/employees/${employee._id}`,)
+  return axios.delete(`${baseUrl}${Constants.EMP_ENDPOINT}/${employee._id}`,)
 }

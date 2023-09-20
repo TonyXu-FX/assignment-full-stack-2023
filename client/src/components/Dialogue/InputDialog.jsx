@@ -1,6 +1,7 @@
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
+import * as Constants from '../../helpers/constants';
 
 /**
  * A dialog containing some content and the option to "submit" or "close"
@@ -40,7 +41,7 @@ const InputDialog = ({
           onClick={handleSubmit}
           variant={isDelete ? "danger" : "success"}
         >
-          {isDelete ? "Delete" : "Submit"}
+          {isDelete ? Constants.DELETE : Constants.SUBMIT}
         </Button>
       </Modal.Footer>
     </Modal>
