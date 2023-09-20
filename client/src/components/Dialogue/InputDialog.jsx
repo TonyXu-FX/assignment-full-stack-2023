@@ -2,6 +2,17 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 
+/**
+ * A dialog containing some content and the option to "submit" or "close"
+ * visible - the visibility of the dialog
+ * title - title shown in the top-left corner
+ * children - the main content of the dialog
+ * handleClose - called when the dialog is closed through anymeans
+ * handleSubmit - called when the submit button is pressed
+ * isDelete - when true, the submit button becomes a delete button
+ * isError - toggles the error notification of the dialog
+ * errorMsg - the message displayed in the above notification
+ */
 const InputDialog = ({ 
   visible,
   title, 

@@ -8,6 +8,14 @@ import './App.css';
 import { addEmployee, deleteEmployee, editEmployee, getEmployees } from './helpers/api';
 import { isEmployeeValid } from './helpers/helpers';
 
+/**
+ * The table displaying all employee info
+ * employees - list of employees to display
+ * setCurrentEmp - function for setting which employee to edit
+ * setCurrEmpIndex - function for setting the index of the above employee
+ * setEmployeeDialogVisible - for toggling the edit/add employee dialogue
+ * setDeleteDialogVisible - for toggling the delete employee dialogue
+ */
 const EmployeeTable = ({ 
   employees,
   setCurrentEmp,
@@ -58,6 +66,13 @@ const EmployeeTable = ({
   )
 }
 
+/** 
+ * The form used for editing/adding an employee
+ * dialogVisible - whether this form is visible
+ * currentEmp - the employee being edited if there is one, null o/w
+ * onSuccess - called when add/edit succeeds
+ * onFailure - called when add/edit fails
+ */
 const EmployeeForm = ({ 
   dialogVisible,
   setDialogVisible,
@@ -133,6 +148,13 @@ const EmployeeForm = ({
   );
 }
 
+/**
+ * Confirmation dialogue for deleting employee
+ * dialogVisible - whether this form is visible
+ * currentEmp - the employee being deleted
+ * onSuccess - called when delete succeeds
+ * onFailure - called when delete fails
+ */
 const DeleteForm = ({
   dialogVisible,
   setDialogVisible,
@@ -169,6 +191,8 @@ function App() {
   
   const [employeeDialogVisible, setEmployeeDialogVisible] = useState(false);
   const [deleteDialogVisible, setDeleteDialogVisible] = useState(false);
+  
+  // Used to hold the employee being edited/deleted, if there is one
   const [currentEmp, setCurrentEmp] = useState(null);
   const [currEmpIndex, setCurrEmpIndex] = useState(-1);
 
@@ -183,12 +207,14 @@ function App() {
 
   const onEmployeeSuccess = (newEmp) => {
     if (currentEmp !== null) {
+      // If currentEmp is not null, editing an employee
       setEmployees(employees.map((emp, index) => {
         if (index === currEmpIndex)
           return newEmp;
         return emp;
       }))
     } else {
+      // currentEmp is not, adding an employee
       setEmployees([...employees, newEmp])
     }
   }
@@ -196,8 +222,10 @@ function App() {
   const onEmployeeFail = () => {
     setIsError(true);
     if (currentEmp !== null) {
+      // If currentEmp is not null, editing an employee
       setErrorMsg("Failed to edit employee");
     } else {
+      // currentEmp is not, adding an employee
       setErrorMsg("Failed to add employee");
     }
   }
@@ -206,7 +234,7 @@ function App() {
     setEmployees(employees.filter((_, index) => index !== currEmpIndex))
   }
 
-  const onDeleteFail = (err) => {
+  const onDeleteFail = () => {
     setIsError(true);
     setErrorMsg("Failed to delete employee");
   }

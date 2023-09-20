@@ -51,7 +51,7 @@ const doesEmployeeExist = async (id) => {
 }
 
 /**
- * Check if all fields of the employee object are present/not empty
+ * Check if all fields of the employee object are present and valid
  */
 const isEmployeeValid = (employee) => {
   return employee.firstName 
