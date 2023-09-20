@@ -1,6 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import employeeRouter from './routes/employees.js';
+import employeeRouter from './routes/employeeRoute.js';
 import connectDB from './config/db.js';
 
 dotenv.config();
