@@ -6,3 +6,10 @@ export const getEmployees = async () => {
   const res = await axios.get(`${baseUrl}/employees`);
   return res.data;
 }
+
+export const editEmployee = async (employee) => {
+  const res = await axios.put(
+    `${baseUrl}/employees/${employee._id}`,
+    employee
+  );
+}

@@ -4,17 +4,19 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputDialog from './components/Dialogue/InputDialog';
 import './App.css';
-import { getEmployees } from './helpers/api';
+import { editEmployee, getEmployees } from './helpers/api';
 
 const EmployeeTable = ({ 
   employees,
   setCurrentEmp,
+  setCurrEmpIndex,
   setDialogVisible
 }) => {
   const onEdit = (index) => {
     const editedEmp = employees[index];
-    setCurrentEmp(editedEmp)
-    setDialogVisible(true)
+    setCurrEmpIndex(index);
+    setCurrentEmp(editedEmp);
+    setDialogVisible(true);
   }
 
   const mapEmployeeToRow = (employee, index) => (
@@ -51,6 +53,8 @@ const EmployeeForm = ({
   setDialogVisible,
   currentEmp,
   setCurrentEmp,
+  onSuccess,
+  onFailure,
 }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -73,10 +77,14 @@ const EmployeeForm = ({
   }
 
   const handleSubmit = () => {
+    const editedEmp = {
+      firstName: firstName,
+      lastName: lastName,
+      salary: salary,
+      _id: currentEmp._id
+    }
     if (currentEmp != null) {
-      console.log(firstName);
-      console.log(lastName);
-      console.log(salary);
+      editEmployee(editedEmp).then(res => onSuccess(editedEmp)).catch(onFailure);
       handleClose();
     }
   }
@@ -111,12 +119,25 @@ function App() {
   
   const [dialogVisible, setDialogVisible] = useState(false);
   const [currentEmp, setCurrentEmp] = useState(null);
+  const [currEmpIndex, setCurrEmpIndex] = useState(-1);
+
+  const onSubmitSuccess = (newEmp) => {
+    if (currentEmp != null) {
+      setEmployees(employees.map((emp, index) => {
+        if (index === currEmpIndex)
+          return newEmp;
+        return emp;
+      }))
+    }
+  }
+
+  const onSubmitFail = (err) => console.log(err);
 
   useEffect(() => {
     getEmployees()
       .then(emps => setEmployees(emps))
       .catch(err => console.log(err));
-  }, [])
+  }, []);
 
   return (
     <div className="App">
@@ -124,12 +145,15 @@ function App() {
         employees={employees}
         setCurrentEmp={setCurrentEmp}
         setDialogVisible={setDialogVisible}
+        setCurrEmpIndex={setCurrEmpIndex}
       />
       <EmployeeForm
         dialogVisible={dialogVisible}
         setDialogVisible={setDialogVisible}
         currentEmp={currentEmp}
         setCurrentEmp={setCurrentEmp}
+        onSuccess={onSubmitSuccess}
+        onFailure={onSubmitFail}
       />
     </div>
   );
