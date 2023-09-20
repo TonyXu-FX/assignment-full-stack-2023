@@ -1,5 +1,5 @@
 export const DELETE = "Delete";
-export const SUBMIT = "SUBMIT";
+export const SUBMIT = "Submit";
 
 // API
 export const EMP_ENDPOINT = "/employees"
@@ -13,3 +13,7 @@ export const confirmEmpDelete = (firstName, lastName) => `Are you sure you want 
 export const EDIT_EMP_FAILED = "Failed to edit employee";
 export const ADD_EMP_FAILED = "Failed to add employee";
 export const DELETE_EMP_FAILED = "Failed to delete employee";
+export const EMPLOYEES = "EMPLOYEES"
+export const FIRST_NAME = "First Name";
+export const LAST_NAME = "Last Name";
+export const SALARY = "Salary";

@@ -8,7 +8,7 @@ import * as Constants from '../../helpers/constants';
  * visible - the visibility of the dialog
  * title - title shown in the top-left corner
  * children - the main content of the dialog
- * handleClose - called when the dialog is closed through anymeans
+ * handleClose - called when the dialog is closed through any means
  * handleSubmit - called when the submit button is pressed
  * isDelete - when true, the submit button becomes a delete button
  * isError - toggles the error notification of the dialog

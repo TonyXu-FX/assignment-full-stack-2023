@@ -54,9 +54,9 @@ const EmployeeTable = ({
     <table className='employee-table'>
       <thead className='emp-table-header'>
         <tr>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Salary</th>
+          <th>{Constants.FIRST_NAME}</th>
+          <th>{Constants.LAST_NAME}</th>
+          <th>{Constants.SALARY}</th>
           <th />
         </tr>
       </thead>
@@ -91,6 +91,10 @@ const EmployeeForm = ({
       setFirstName(currentEmp.firstName);
       setLastName(currentEmp.lastName);
       setSalary(currentEmp.salary);
+    } else {
+      setFirstName("");
+      setLastName("");
+      setSalary(0);
     }
   }, [currentEmp])
 
@@ -99,7 +103,7 @@ const EmployeeForm = ({
     setIsError(false);
     setFirstName("");
     setLastName("");
-    setSalary("");
+    setSalary(0);
   }
 
   const handleSubmit = () => {
@@ -115,8 +119,10 @@ const EmployeeForm = ({
     }
 
     if (currentEmp !== null) {
+      // If currentEmp is not null, editing an employee
       editEmployee(newEmp).then(() => onSuccess(newEmp)).catch(onFailure);
     } else {
+      // currentEmp is null, adding an employee
       addEmployee(newEmp).then(res => onSuccess(res.data)).catch(onFailure);
     }
     handleClose();
@@ -133,15 +139,15 @@ const EmployeeForm = ({
     >
       <Form>
         <Form.Group className="mb-3" controlId="firstName">
-          <Form.Label>First Name</Form.Label>
+          <Form.Label>{Constants.FIRST_NAME}</Form.Label>
           <Form.Control onChange={e => setFirstName(e.target.value)} value={firstName} />
         </Form.Group>
         <Form.Group className="mb-3" controlId="lastName">
-          <Form.Label>Last Name</Form.Label>
+          <Form.Label>{Constants.LAST_NAME}</Form.Label>
           <Form.Control onChange={e => setLastName(e.target.value)} value={lastName} />
         </Form.Group>
         <Form.Group className="mb-3" controlId="salary">
-          <Form.Label>Salary</Form.Label>
+          <Form.Label>{Constants.SALARY}</Form.Label>
           <Form.Control onChange={e => setSalary(e.target.value)} value={salary} />
         </Form.Group>
       </Form>
@@ -215,7 +221,7 @@ function App() {
         return emp;
       }))
     } else {
-      // currentEmp is not, adding an employee
+      // currentEmp is null, adding an employee
       setEmployees([...employees, newEmp])
     }
   }
@@ -226,7 +232,7 @@ function App() {
       // If currentEmp is not null, editing an employee
       setErrorMsg(Constants.EDIT_EMP_FAILED);
     } else {
-      // currentEmp is not, adding an employee
+      // currentEmp is null, adding an employee
       setErrorMsg(Constants.ADD_EMP_FAILED);
     }
   }
@@ -248,7 +254,7 @@ function App() {
 
   return (
     <div className="App">
-      <h2>EMPLOYEES</h2>
+      <h2>{Constants.EMPLOYEES}</h2>
       <EmployeeTable
         employees={employees}
         setCurrentEmp={setCurrentEmp}
@@ -261,7 +267,7 @@ function App() {
         variant='success'
         onClick={onAddEmployee}
       >
-        Add Employee
+        {Constants.ADD_EMP}
       </Button>
       <EmployeeForm
         dialogVisible={employeeDialogVisible}
