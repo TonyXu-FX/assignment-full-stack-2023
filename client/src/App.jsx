@@ -4,51 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputDialog from './components/Dialogue/InputDialog';
 import './App.css';
-
-const data = [
-  {
-    "_id": 1,
-    "firstName": "Lewis",
-    "lastName": "Burson",
-    "salary": 40700
-  },
-  {
-    "_id": 2,
-    "firstName": "Ian",
-    "lastName": "Malcolm",
-    "salary": 70000
-  },
-  {
-    "_id": 3,
-    "firstName": "Ellie",
-    "lastName": "Sattler",
-    "salary": 102000
-  },
-  {
-    "_id": 4,
-    "firstName": "Dennis",
-    "lastName": "Nedry",
-    "salary": 52000
-  },
-  {
-    "_id": 5,
-    "firstName": "John",
-    "lastName": "Hammond",
-    "salary": 89600
-  },
-  {
-    "_id": 6,
-    "firstName": "Ray",
-    "lastName": "Arnold",
-    "salary": 45000
-  },
-  {
-    "_id": 7,
-    "firstName": "Laura",
-    "lastName": "Burnett",
-    "salary": 80000
-  }
-];
+import { getEmployees } from './helpers/api';
 
 const EmployeeTable = ({ 
   employees,
@@ -57,7 +13,6 @@ const EmployeeTable = ({
 }) => {
   const onEdit = (index) => {
     const editedEmp = employees[index];
-    console.log(index);
     setCurrentEmp(editedEmp)
     setDialogVisible(true)
   }
@@ -152,13 +107,21 @@ const EmployeeForm = ({
 }
 
 function App() {
+  const [employees, setEmployees] = useState([]);
+  
   const [dialogVisible, setDialogVisible] = useState(false);
   const [currentEmp, setCurrentEmp] = useState(null);
+
+  useEffect(() => {
+    getEmployees()
+      .then(emps => setEmployees(emps))
+      .catch(err => console.log(err));
+  }, [])
 
   return (
     <div className="App">
       <EmployeeTable
-        employees={data}
+        employees={employees}
         setCurrentEmp={setCurrentEmp}
         setDialogVisible={setDialogVisible}
       />
