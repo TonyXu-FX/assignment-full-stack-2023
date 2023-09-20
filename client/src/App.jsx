@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputDialog from './components/Dialogue/InputDialog';
 import './App.css';
-import { editEmployee, getEmployees } from './helpers/api';
+import { addEmployee, editEmployee, getEmployees } from './helpers/api';
 
 const EmployeeTable = ({ 
   employees,
@@ -77,16 +77,18 @@ const EmployeeForm = ({
   }
 
   const handleSubmit = () => {
-    const editedEmp = {
+    const newEmp = {
       firstName: firstName,
       lastName: lastName,
       salary: salary,
-      _id: currentEmp._id
+      _id: currentEmp ? currentEmp._id : undefined
     }
     if (currentEmp != null) {
-      editEmployee(editedEmp).then(res => onSuccess(editedEmp)).catch(onFailure);
-      handleClose();
+      editEmployee(newEmp).then(() => onSuccess(newEmp)).catch(onFailure);
+    } else {
+      addEmployee(newEmp).then(res => onSuccess(res.data)).catch(onFailure);
     }
+    handleClose();
   }
 
   return (
@@ -121,6 +123,12 @@ function App() {
   const [currentEmp, setCurrentEmp] = useState(null);
   const [currEmpIndex, setCurrEmpIndex] = useState(-1);
 
+  const onAddEmployee = () => {
+    setCurrEmpIndex(-1);
+    setCurrentEmp(null);
+    setDialogVisible(true);
+  }
+
   const onSubmitSuccess = (newEmp) => {
     if (currentEmp != null) {
       setEmployees(employees.map((emp, index) => {
@@ -128,6 +136,8 @@ function App() {
           return newEmp;
         return emp;
       }))
+    } else {
+      setEmployees([...employees, newEmp])
     }
   }
 
@@ -147,6 +157,7 @@ function App() {
         setDialogVisible={setDialogVisible}
         setCurrEmpIndex={setCurrEmpIndex}
       />
+      <Button onClick={onAddEmployee}>Add Employee</Button>
       <EmployeeForm
         dialogVisible={dialogVisible}
         setDialogVisible={setDialogVisible}

@@ -7,9 +7,16 @@ export const getEmployees = async () => {
   return res.data;
 }
 
-export const editEmployee = async (employee) => {
-  const res = await axios.put(
+export const editEmployee = (employee) => {
+  return axios.put(
     `${baseUrl}/employees/${employee._id}`,
     employee
   );
+}
+
+export const addEmployee = (employee) => {
+  return axios.post(
+    `${baseUrl}/employees`,
+    employee
+  )
 }
