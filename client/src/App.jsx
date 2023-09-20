@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Alert from 'react-bootstrap/Alert';
 import InputDialog from './components/Dialogue/InputDialog';
 import './App.css';
 import { addEmployee, deleteEmployee, editEmployee, getEmployees } from './helpers/api';
+import { isEmployeeValid } from './helpers/helpers';
 
 const EmployeeTable = ({ 
   employees,
@@ -40,7 +42,7 @@ const EmployeeTable = ({
   );
 
   return (
-    <Table border={1}>
+    <table className='employee-table'>
       <thead>
         <tr>
           <th>First Name</th>
@@ -52,7 +54,7 @@ const EmployeeTable = ({
       <tbody>
         {employees.map((employee, index) => mapEmployeeToRow(employee, index))}
       </tbody>
-    </Table>
+    </table>
   )
 }
 
@@ -66,9 +68,10 @@ const EmployeeForm = ({
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [salary, setSalary] = useState(0);
+  const [isError, setIsError] = useState(false);
 
   useEffect(() => {
-    if (currentEmp != null) {
+    if (currentEmp !== null) {
       setFirstName(currentEmp.firstName);
       setLastName(currentEmp.lastName);
       setSalary(currentEmp.salary);
@@ -77,6 +80,7 @@ const EmployeeForm = ({
 
   const handleClose = () => {
     setDialogVisible(false);
+    setIsError(false);
     setFirstName("");
     setLastName("");
     setSalary("");
@@ -89,7 +93,12 @@ const EmployeeForm = ({
       salary: salary,
       _id: currentEmp ? currentEmp._id : undefined
     }
-    if (currentEmp != null) {
+    if (!isEmployeeValid(newEmp)) {
+      setIsError(true);
+      return;
+    }
+
+    if (currentEmp !== null) {
       editEmployee(newEmp).then(() => onSuccess(newEmp)).catch(onFailure);
     } else {
       addEmployee(newEmp).then(res => onSuccess(res.data)).catch(onFailure);
@@ -100,9 +109,11 @@ const EmployeeForm = ({
   return (
     <InputDialog
       visible={dialogVisible}
-      title={currentEmp != null ? "Edit Employee" : "Add Employee"}
+      title={currentEmp !== null ? "Edit Employee" : "Add Employee"}
       handleClose={handleClose}
       handleSubmit={handleSubmit}
+      isError={isError}
+      errorMsg={"Error: Some field is invalid"}
     >
       <Form>
         <Form.Group className="mb-3" controlId="firstName">
@@ -146,7 +157,7 @@ const DeleteForm = ({
       handleSubmit={handleSubmit}
       isDelete
     >
-      {currentEmp != null ?
+      {currentEmp !== null ?
         `Are you sure you want to delete ${currentEmp.firstName} ${currentEmp.lastName}?` :
         null}
     </InputDialog>
@@ -161,14 +172,17 @@ function App() {
   const [currentEmp, setCurrentEmp] = useState(null);
   const [currEmpIndex, setCurrEmpIndex] = useState(-1);
 
+  const [isError, setIsError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
   const onAddEmployee = () => {
     setCurrEmpIndex(-1);
     setCurrentEmp(null);
     setEmployeeDialogVisible(true);
   }
 
-  const onSubmitSuccess = (newEmp) => {
-    if (currentEmp != null) {
+  const onEmployeeSuccess = (newEmp) => {
+    if (currentEmp !== null) {
       setEmployees(employees.map((emp, index) => {
         if (index === currEmpIndex)
           return newEmp;
@@ -179,13 +193,23 @@ function App() {
     }
   }
 
-  const onSubmitFail = (err) => console.log(err);
-
-  const onDeleteSuccess = () => {
-    setEmployees(employees.filter((_, index) => index != currEmpIndex))
+  const onEmployeeFail = () => {
+    setIsError(true);
+    if (currentEmp !== null) {
+      setErrorMsg("Failed to edit employee");
+    } else {
+      setErrorMsg("Failed to add employee");
+    }
   }
 
-  const onDeleteFail = (err) => console.log(err);
+  const onDeleteSuccess = () => {
+    setEmployees(employees.filter((_, index) => index !== currEmpIndex))
+  }
+
+  const onDeleteFail = (err) => {
+    setIsError(true);
+    setErrorMsg("Failed to delete employee");
+  }
 
   useEffect(() => {
     getEmployees()
@@ -198,7 +222,7 @@ function App() {
       <EmployeeTable
         employees={employees}
         setCurrentEmp={setCurrentEmp}
-        setDialogVisible={setEmployeeDialogVisible}
+        setEmployeeDialogVisible={setEmployeeDialogVisible}
         setCurrEmpIndex={setCurrEmpIndex}
         setDeleteDialogVisible={setDeleteDialogVisible}
       />
@@ -208,8 +232,8 @@ function App() {
         setDialogVisible={setEmployeeDialogVisible}
         currentEmp={currentEmp}
         setCurrentEmp={setCurrentEmp}
-        onSuccess={onSubmitSuccess}
-        onFailure={onSubmitFail}
+        onSuccess={onEmployeeSuccess}
+        onFailure={onEmployeeFail}
       />
       <DeleteForm
         dialogVisible={deleteDialogVisible}
@@ -219,6 +243,17 @@ function App() {
         onSuccess={onDeleteSuccess}
         onFailure={onDeleteFail}
       />
+      {
+        isError ? 
+          <Alert
+            variant='danger'
+            onClose={() => setIsError(false)}
+            dismissible
+          >
+            {errorMsg}
+          </Alert> :
+          null
+      }
     </div>
   );
 }

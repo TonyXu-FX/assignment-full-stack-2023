@@ -1,7 +1,17 @@
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import Alert from 'react-bootstrap/Alert';
 
-const InputDialog = ({ visible, title, children, handleClose, handleSubmit, isDelete }) => {
+const InputDialog = ({ 
+  visible,
+  title, 
+  children, 
+  handleClose, 
+  handleSubmit, 
+  isDelete,
+  isError,
+  errorMsg
+}) => {
   return (
     <Modal onHide={handleClose} show={visible}>
       <Modal.Header closeButton>
@@ -10,6 +20,7 @@ const InputDialog = ({ visible, title, children, handleClose, handleSubmit, isDe
 
       <Modal.Body>
         {children}
+        {isError ? <Alert variant='danger'>{errorMsg}</Alert> : null}
       </Modal.Body>
 
       <Modal.Footer>
