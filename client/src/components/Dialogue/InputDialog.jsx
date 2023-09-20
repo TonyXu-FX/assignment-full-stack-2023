@@ -27,7 +27,7 @@ const InputDialog = ({
         <Button onClick={handleClose} variant="secondary">Close</Button>
         <Button 
           onClick={handleSubmit}
-          variant={isDelete ? "danger" : "primary"}
+          variant={isDelete ? "danger" : "success"}
         >
           {isDelete ? "Delete" : "Submit"}
         </Button>

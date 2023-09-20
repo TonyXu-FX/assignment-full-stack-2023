@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Alert from 'react-bootstrap/Alert';
+import { BsPencilFill, BsTrashFill } from 'react-icons/bs';
 import InputDialog from './components/Dialogue/InputDialog';
 import './App.css';
 import { addEmployee, deleteEmployee, editEmployee, getEmployees } from './helpers/api';
@@ -33,17 +33,17 @@ const EmployeeTable = ({
     <tr key={employee._id}>
       <td>{employee.firstName}</td>
       <td>{employee.lastName}</td>
-      <td>{employee.salary}</td>
+      <td>{'$' + Number(employee.salary).toLocaleString('en-US')}</td>
       <td>
-        <Button onClick={() => onEdit(index)}>Edit</Button>
-        <Button onClick={() => onDelete(index)}>Delete</Button>
+        <button className='icon-btn' onClick={() => onEdit(index)}><BsPencilFill className='text-warning' /></button>
+        <button className='icon-btn' onClick={() => onDelete(index)}><BsTrashFill className='text-danger' /></button>
       </td>
     </tr>
   );
 
   return (
     <table className='employee-table'>
-      <thead>
+      <thead className='emp-table-header'>
         <tr>
           <th>First Name</th>
           <th>Last Name</th>
@@ -219,6 +219,7 @@ function App() {
 
   return (
     <div className="App">
+      <h2>EMPLOYEES</h2>
       <EmployeeTable
         employees={employees}
         setCurrentEmp={setCurrentEmp}
@@ -226,7 +227,13 @@ function App() {
         setCurrEmpIndex={setCurrEmpIndex}
         setDeleteDialogVisible={setDeleteDialogVisible}
       />
-      <Button onClick={onAddEmployee}>Add Employee</Button>
+      <Button
+        className='add-emp-btn'
+        variant='success'
+        onClick={onAddEmployee}
+      >
+        Add Employee
+      </Button>
       <EmployeeForm
         dialogVisible={employeeDialogVisible}
         setDialogVisible={setEmployeeDialogVisible}

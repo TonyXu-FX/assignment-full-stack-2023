@@ -1,3 +1,27 @@
 .App {
+  width: 70%;
+  margin: auto;
+  margin-top: 20px;
+  background-color: whitesmoke;
+  border-radius: 10px;
   text-align: center;
+}
+
+.employee-table {
+  width: 100%;
+  border-bottom: 1px solid lightgrey;
+  text-align: center;
+}
+
+.emp-table-header {
+  border-bottom: 1px solid lightgrey;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+}
+
+.add-emp-btn {
+  margin: 20px;
 }
