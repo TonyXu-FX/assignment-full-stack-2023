@@ -101,9 +101,6 @@ const EmployeeForm = ({
   const handleClose = () => {
     setDialogVisible(false);
     setIsError(false);
-    setFirstName("");
-    setLastName("");
-    setSalary(0);
   }
 
   const handleSubmit = () => {
