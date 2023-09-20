@@ -20,3 +20,7 @@ export const addEmployee = (employee) => {
     employee
   )
 }
+
+export const deleteEmployee = (employee) => {
+  return axios.delete(`${baseUrl}/employees/${employee._id}`,)
+}

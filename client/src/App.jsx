@@ -4,19 +4,27 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputDialog from './components/Dialogue/InputDialog';
 import './App.css';
-import { addEmployee, editEmployee, getEmployees } from './helpers/api';
+import { addEmployee, deleteEmployee, editEmployee, getEmployees } from './helpers/api';
 
 const EmployeeTable = ({ 
   employees,
   setCurrentEmp,
   setCurrEmpIndex,
-  setDialogVisible
+  setEmployeeDialogVisible,
+  setDeleteDialogVisible,
 }) => {
   const onEdit = (index) => {
     const editedEmp = employees[index];
     setCurrEmpIndex(index);
     setCurrentEmp(editedEmp);
-    setDialogVisible(true);
+    setEmployeeDialogVisible(true);
+  }
+
+  const onDelete = (index) => {
+    const deletedEmp = employees[index];
+    setCurrEmpIndex(index);
+    setCurrentEmp(deletedEmp);
+    setDeleteDialogVisible(true);
   }
 
   const mapEmployeeToRow = (employee, index) => (
@@ -26,7 +34,7 @@ const EmployeeTable = ({
       <td>{employee.salary}</td>
       <td>
         <Button onClick={() => onEdit(index)}>Edit</Button>
-        <Button>Delete</Button>
+        <Button onClick={() => onDelete(index)}>Delete</Button>
       </td>
     </tr>
   );
@@ -52,7 +60,6 @@ const EmployeeForm = ({
   dialogVisible,
   setDialogVisible,
   currentEmp,
-  setCurrentEmp,
   onSuccess,
   onFailure,
 }) => {
@@ -70,7 +77,6 @@ const EmployeeForm = ({
 
   const handleClose = () => {
     setDialogVisible(false);
-    setCurrentEmp(null);
     setFirstName("");
     setLastName("");
     setSalary("");
@@ -116,17 +122,49 @@ const EmployeeForm = ({
   );
 }
 
+const DeleteForm = ({
+  dialogVisible,
+  setDialogVisible,
+  currentEmp,
+  onSuccess,
+  onFailure
+}) => {
+  const handleSubmit = () => {
+    deleteEmployee(currentEmp).then(onSuccess).catch(onFailure);
+    handleClose();
+  }
+
+  const handleClose = () => {
+    setDialogVisible(false)
+  }
+
+  return (
+    <InputDialog
+      visible={dialogVisible}
+      title={"Delete Employee"}
+      handleClose={handleClose}
+      handleSubmit={handleSubmit}
+      isDelete
+    >
+      {currentEmp != null ?
+        `Are you sure you want to delete ${currentEmp.firstName} ${currentEmp.lastName}?` :
+        null}
+    </InputDialog>
+  );
+}
+
 function App() {
   const [employees, setEmployees] = useState([]);
   
-  const [dialogVisible, setDialogVisible] = useState(false);
+  const [employeeDialogVisible, setEmployeeDialogVisible] = useState(false);
+  const [deleteDialogVisible, setDeleteDialogVisible] = useState(false);
   const [currentEmp, setCurrentEmp] = useState(null);
   const [currEmpIndex, setCurrEmpIndex] = useState(-1);
 
   const onAddEmployee = () => {
     setCurrEmpIndex(-1);
     setCurrentEmp(null);
-    setDialogVisible(true);
+    setEmployeeDialogVisible(true);
   }
 
   const onSubmitSuccess = (newEmp) => {
@@ -143,6 +181,12 @@ function App() {
 
   const onSubmitFail = (err) => console.log(err);
 
+  const onDeleteSuccess = () => {
+    setEmployees(employees.filter((_, index) => index != currEmpIndex))
+  }
+
+  const onDeleteFail = (err) => console.log(err);
+
   useEffect(() => {
     getEmployees()
       .then(emps => setEmployees(emps))
@@ -154,17 +198,26 @@ function App() {
       <EmployeeTable
         employees={employees}
         setCurrentEmp={setCurrentEmp}
-        setDialogVisible={setDialogVisible}
+        setDialogVisible={setEmployeeDialogVisible}
         setCurrEmpIndex={setCurrEmpIndex}
+        setDeleteDialogVisible={setDeleteDialogVisible}
       />
       <Button onClick={onAddEmployee}>Add Employee</Button>
       <EmployeeForm
-        dialogVisible={dialogVisible}
-        setDialogVisible={setDialogVisible}
+        dialogVisible={employeeDialogVisible}
+        setDialogVisible={setEmployeeDialogVisible}
         currentEmp={currentEmp}
         setCurrentEmp={setCurrentEmp}
         onSuccess={onSubmitSuccess}
         onFailure={onSubmitFail}
+      />
+      <DeleteForm
+        dialogVisible={deleteDialogVisible}
+        setDialogVisible={setDeleteDialogVisible}
+        currentEmp={currentEmp}
+        setCurrentEmp={setCurrentEmp}
+        onSuccess={onDeleteSuccess}
+        onFailure={onDeleteFail}
       />
     </div>
   );
