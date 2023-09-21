@@ -1,5 +1,16 @@
 # Take-home Assignment (Full Stack) #
 
+### Running The Code ###
+* To initialize DB:
+  * cd into /server
+  * npm run init
+* To run server:
+  * cd into /server
+  * npm run app
+* To run client:
+  * cd into /client
+  * npm start
+
 ### Goal: ###
 * Create an Employee Table like the one in the image below.
 * Use any front-end framework (Angular, React, Vue, ect...) or CSS library to accomplish this.
