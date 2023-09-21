@@ -3,12 +3,15 @@
 ### Running The Code ###
 * To initialize DB:
   * cd into /server
+  * npm install
   * npm run init
 * To run server:
   * cd into /server
+  * npm install
   * npm run app
 * To run client:
   * cd into /client
+  * npm install
   * npm start
 
 ### Goal: ###
