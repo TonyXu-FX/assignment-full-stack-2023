@@ -21,4 +21,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const employees = JSON.parse(fs.readFileSync(`${__dirname}/data.json`, 'utf8'));
 await Employee.insertMany(employees.employees);
+
 console.log('Database successfully initialized');
+process.exit();
