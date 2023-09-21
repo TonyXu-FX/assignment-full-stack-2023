@@ -42,7 +42,7 @@ const EmployeeTable = ({
     <tr key={employee._id}>
       <td>{employee.firstName}</td>
       <td>{employee.lastName}</td>
-      <td>{'$' + Number(employee.salary).toLocaleString('en-US')}</td>
+      <td>{'$' + employee.salary.toLocaleString('en-US')}</td>
       <td>
         <button className='icon-btn' onClick={() => onEdit(index)}><BsPencilFill className='text-warning' /></button>
         <button className='icon-btn' onClick={() => onDelete(index)}><BsTrashFill className='text-danger' /></button>
@@ -145,7 +145,16 @@ const EmployeeForm = ({
         </Form.Group>
         <Form.Group className="mb-3" controlId="salary">
           <Form.Label>{Constants.SALARY}</Form.Label>
-          <Form.Control onChange={e => setSalary(e.target.value)} value={salary} />
+          <Form.Control
+            onChange={e => {
+              const re = /^[0-9\b]+$/
+              if (e.target.value === "") {
+                setSalary(0);
+              } else if (re.test(e.target.value)) {
+                setSalary(Number(e.target.value))
+              }
+            }}
+            value={salary} />
         </Form.Group>
       </Form>
     </InputDialog>
